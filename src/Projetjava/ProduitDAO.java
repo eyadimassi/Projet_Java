@@ -218,7 +218,7 @@ public class ProduitDAO {
 
     public List<Produit> getProductsByPrice(boolean ascending) {
     List<Produit> produits = new ArrayList<>();
-    String orderBy = ascending ? "ASC" : "DESC";  // Choisir l'ordre en fonction du paramètre
+    String orderBy = ascending ? "ASC" : "DESC";  
 
     String sql = "SELECT * FROM produit ORDER BY prix " + orderBy;
 

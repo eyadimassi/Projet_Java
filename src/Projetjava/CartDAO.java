@@ -1,13 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Projetjava;
 
-/**
- *
- * @author LENOVO
- */
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,7 +18,7 @@ public class CartDAO {
         this.connection = connection;
     }
 
-    // 1. Create or Retrieve Cart for User
+    
     public int getOrCreateCartByUserId(int userId) {
         String sql = "SELECT id FROM cart WHERE user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -43,7 +36,7 @@ public class CartDAO {
         }
     }
 
-    // 2. Create or Retrieve Cart for Guest
+    
     public int getOrCreateCartByGuestId(int guestId) {
         String sql = "SELECT id FROM cart WHERE guest_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -61,7 +54,7 @@ public class CartDAO {
         }
     }
 
-    // 3. Create Cart for User
+    
     private int createCartForUser(int userId) {
         String sql = "INSERT INTO cart (user_id, created_at) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -80,7 +73,7 @@ public class CartDAO {
         return -1;
     }
 
-    // 4. Create Cart for Guest
+    
     private int createCartForGuest(int guestId) {
         String sql = "INSERT INTO cart (guest_id, created_at) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -100,7 +93,7 @@ public class CartDAO {
     }
     
     
-    // 5. Get Cart by ID
+    
     public Cart getCartById(int cartId) {
         String sql = "SELECT * FROM cart WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -122,7 +115,7 @@ public class CartDAO {
         return null;
     }
     
-    // 6. Update Cart When Guest Becomes a User (transfer guest_id to user_id)
+    
     public void transferGuestCartToUser(int guestId, int userId) {
         String sql = "UPDATE cart SET guest_id = NULL, user_id = ? WHERE guest_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

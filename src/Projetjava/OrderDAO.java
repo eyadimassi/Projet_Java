@@ -14,9 +14,8 @@ public class OrderDAO {
 
     
     
-    // 1. Create Order
     public int createOrder(int userId, int cartId, int totalPrice, int totalProducts, String delivery) {
-    Cart_itemsDAO cartItemsDAO = new Cart_itemsDAO(this.connection); // Create instance to use isCartEmpty
+    Cart_itemsDAO cartItemsDAO = new Cart_itemsDAO(this.connection); 
 
     if (cartItemsDAO.isCartEmpty(cartId)) {
         throw new RuntimeException("Cannot place an order: The cart is empty.");
@@ -36,7 +35,7 @@ public class OrderDAO {
 
         ResultSet rs = stmt.getGeneratedKeys();
         if (rs.next()) {
-            return rs.getInt(1); // Return the generated order ID
+            return rs.getInt(1); 
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -46,8 +45,7 @@ public class OrderDAO {
     return -1;
 }
 
-    
-    // 2. Get Order by ID
+ 
     public Order getOrderById(int orderId) {
         String sql = "SELECT * FROM `order` WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -73,7 +71,7 @@ public class OrderDAO {
         return null;
     }
 
-    // 3. Get Orders by User ID
+   
     public List<Order> getOrdersByUserId(int userId) {
         String sql = "SELECT * FROM `order` WHERE user_id = ?";
         List<Order> orders = new ArrayList<>();
@@ -101,7 +99,7 @@ public class OrderDAO {
         return orders;
     }
 
-    // 4. Update Order Status
+    
     public void updateOrderStatus(int orderId, String newStatus) {
         String sql = "UPDATE `order` SET statut = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -115,7 +113,7 @@ public class OrderDAO {
     }
     
     public List<Order> getAllOrders() {
-    String sql = "SELECT * FROM `order`";  // Replace with your actual table name, if different
+    String sql = "SELECT * FROM `order`"; 
     List<Order> orders = new ArrayList<>();
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {

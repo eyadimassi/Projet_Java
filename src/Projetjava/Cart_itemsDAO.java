@@ -18,7 +18,7 @@ public class Cart_itemsDAO {
         this.connection = connection;
     }
 
-    // Method to add an item or update its quantity if it already exists
+    
     public void addItemOrUpdateQuantity(int cartId, int productId, int quantityToAdd) {
         if (quantityToAdd <= 0) {
             throw new IllegalArgumentException("Quantity to add must be positive.");
@@ -34,7 +34,6 @@ public class Cart_itemsDAO {
             ResultSet rs = selectStmt.executeQuery();
 
             if (rs.next()) {
-                // Item exists, update quantity
                 int existingItemId = rs.getInt("id");
                 int existingQuantity = rs.getInt("quantity");
                 int newQuantity = existingQuantity + quantityToAdd;
@@ -45,7 +44,6 @@ public class Cart_itemsDAO {
                     System.out.println("Updated quantity for product " + productId + " in cart " + cartId);
                 }
             } else {
-                // Item does not exist, insert new item
                 try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
                     insertStmt.setInt(1, cartId);
                     insertStmt.setInt(2, productId);
@@ -60,7 +58,7 @@ public class Cart_itemsDAO {
         }
     }
 
-    // Get all items for a specific cart
+ 
     public List<Cart_items> getItemsByCartId(int cartId) {
         List<Cart_items> items = new ArrayList<>();
         String sql = "SELECT * FROM cart_items WHERE cart_id = ?";
@@ -83,13 +81,11 @@ public class Cart_itemsDAO {
         return items;
     }
 
-    // Update the quantity of a specific cart item (identified by its own ID)
+    
     public void updateItemQuantity(int cartItemId, int newQuantity) {
          if (newQuantity <= 0) {
-             // If quantity is zero or less, remove the item instead
              removeItemFromCart(cartItemId);
              return;
-            // OR: throw new IllegalArgumentException("Quantity must be positive. Use remove to delete.");
         }
         String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -98,8 +94,6 @@ public class Cart_itemsDAO {
             int rowsAffected = stmt.executeUpdate();
              if (rowsAffected == 0) {
                 System.err.println("Warning: No cart item found with ID " + cartItemId + " to update.");
-                // Optionally throw an exception if the item must exist
-                // throw new RuntimeException("Cart item with ID " + cartItemId + " not found.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,7 +101,7 @@ public class Cart_itemsDAO {
         }
     }
 
-    // Remove a specific item from the cart (identified by its own ID)
+
     public void removeItemFromCart(int cartItemId) {
         String sql = "DELETE FROM cart_items WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -122,7 +116,6 @@ public class Cart_itemsDAO {
         }
     }
 
-    // Clear all items from a cart (useful after placing order)
     public void clearCart(int cartId) {
          String sql = "DELETE FROM cart_items WHERE cart_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -135,7 +128,6 @@ public class Cart_itemsDAO {
     }
 
 
-    // isCartEmpty method (already provided in the initial request)
     public boolean isCartEmpty(int cartId) {
         String sql = "SELECT COUNT(*) FROM cart_items WHERE cart_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
