@@ -11,17 +11,18 @@ public class LoginFrame extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private JButton signUpButton;
     private JLabel statusLabel;
 
     private UtilisateurDAO utilisateurDAO;
-    private Connection connection; 
+    private Connection connection;
 
     public LoginFrame() {
         super("Login - Cosmetics Website");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 250);
-        setLocationRelativeTo(null); 
-        setLayout(new BorderLayout(10, 10)); 
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
 
         try {
             connection = CosmeticsWebsite.getConnection();
@@ -30,43 +31,46 @@ public class LoginFrame extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "Database connection error: " + e.getMessage(),
                     "Connection Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(1); 
+            System.exit(1);
         }
 
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); 
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.EAST;
         formPanel.add(new JLabel("Username:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 1; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST; gbc.gridwidth = 2;
         usernameField = new JTextField(15);
         formPanel.add(usernameField, gbc);
-
+        gbc.gridwidth = 1;
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.EAST;
         formPanel.add(new JLabel("Password:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 1; gbc.gridy = 1; gbc.anchor = GridBagConstraints.WEST; gbc.gridwidth = 2;
         passwordField = new JPasswordField(15);
         formPanel.add(passwordField, gbc);
+        gbc.gridwidth = 1;
 
-
-        gbc.gridx = 1; gbc.gridy = 2; gbc.anchor = GridBagConstraints.CENTER; gbc.fill = GridBagConstraints.NONE;
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         loginButton = new JButton("Login");
-        formPanel.add(loginButton, gbc);
+        signUpButton = new JButton("Sign Up");
+        buttonPanel.add(loginButton);
+        buttonPanel.add(signUpButton);
 
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER; gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(15, 5, 5, 5);
+        formPanel.add(buttonPanel, gbc);
 
         statusLabel = new JLabel(" ", SwingConstants.CENTER);
         statusLabel.setForeground(Color.RED);
 
-      
         add(formPanel, BorderLayout.CENTER);
         add(statusLabel, BorderLayout.SOUTH);
 
-      
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,7 +78,13 @@ public class LoginFrame extends JFrame {
             }
         });
 
-        
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openSignUpDialog();
+            }
+        });
+
         passwordField.addActionListener(new ActionListener() {
              @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,10 +109,8 @@ public class LoginFrame extends JFrame {
                 statusLabel.setText("Login successful!");
                 dispose();
 
-               
                 String role = user.getRole();
                 if (role != null && role.equalsIgnoreCase("admin")) {
-                   
                     SwingUtilities.invokeLater(() -> {
                         AdminDashboard adminDashboard = new AdminDashboard();
                         adminDashboard.setVisible(true);
@@ -116,19 +124,23 @@ public class LoginFrame extends JFrame {
 
             } else {
                 statusLabel.setText("Invalid username or password.");
-                passwordField.setText(""); 
+                passwordField.setText("");
             }
         } catch (RuntimeException ex) {
-            statusLabel.setText("Error during login. See console.");
-            showError("Login Error: " + ex.getMessage()); 
+            statusLabel.setText("Error during login: " + ex.getMessage());
+            showError("Login Error: " + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    private void openSignUpDialog() {
+        SignUpDialog signUpDialog = new SignUpDialog(this, utilisateurDAO);
+        signUpDialog.setVisible(true);
     }
 
      private void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
-
 
     public static void main(String[] args) {
         try {
