@@ -1,0 +1,11 @@
+@startuml
+[*] --> "non connecte" : etat\ninitial
+"non connecte" --> "connecte"
+"connecte" --> "profil mis a\njour"
+"profil mis a\njour" --> "connecte"
+"connecte" --> "non connecte"
+"non connecte" --> "non connecte"
+"connecte" --> "supprime"
+"non connecte" --> "supprime"
+"supprime" --> [*] : etat\nfinal
+@enduml

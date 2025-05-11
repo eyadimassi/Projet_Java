@@ -1,0 +1,62 @@
+@startuml
+
+[*] --> non_connecte
+
+state non_connecte {
+  :entry / afficherPageConnexion();
+}
+
+non_connecte --> connecte : se connecter
+connecte --> non_connecte : se deconnecter
+connecte --> "profil mis à jour" : mise à jour compte
+connecte --> supprime : supprimer compte
+
+state connecte {
+  :entry / charger profil;
+}
+
+"profil mis à jour" --> [*]
+supprime --> [*]
+
+state "seConnecter()" as seConnecter {
+  [*] --> action
+  state action {
+    if (authentification.validée()) {
+      utilisateur.changerEtat("connecté");
+    }
+  }
+}
+
+state "seDeconnecter()" as seDeconnecter {
+  [*] --> action
+  state action {
+    session.fermer();
+    utilisateur.changerEtat("non connecté");
+  }
+}
+
+state "mettreAJourProfil()" as majProfil {
+  [*] --> action
+  state action {
+    utilisateur.miseAJourInfos();
+    utilisateur.changerEtat("profil mis à jour");
+  }
+}
+
+state "supprimerCompte()" as supprimerCompte {
+  [*] --> action
+  state action {
+    baseDeDonnees.supprimer(utilisateur);
+    utilisateur.changerEtat("supprimé");
+  }
+}
+
+state "profil mis à jour" {
+  :entry / confirmerMiseAJour();
+}
+
+state supprime {
+  :entry / supprimer donnees;
+}
+
+@enduml

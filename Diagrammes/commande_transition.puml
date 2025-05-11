@@ -1,0 +1,16 @@
+@startuml
+[*] --> créé : état initial
+
+créé --> en traitement
+créé --> payé
+créé --> livré
+créé --> [*] : annulation
+
+payé --> en traitement
+payé --> [*] : annulation
+
+en traitement --> expedié
+expedié --> livré
+livré --> payé
+livré --> [*] : état final
+@enduml

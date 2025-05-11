@@ -1,0 +1,65 @@
+@startuml
+
+[*] --> vide
+
+state vide {
+}
+
+vide --> "contient des articles" : ajouter article
+"contient des articles" : entry / verifierArticle
+
+"contient des articles" --> valide : valider
+valide : entry / enregistrer
+
+"contient des articles" --> supprime : supprimer
+supprime : entry / Vider
+
+valide --> [*]
+supprime --> [*]
+
+state "enregistrer()" as enregistrer {
+  [*] --> action
+  state action {
+    :commande.enregistrer(panier);
+  }
+}
+
+state "ajouterArticle()" as ajouterArticle {
+  [*] --> action
+  state action {
+    :panier.ajouter(article);
+  }
+}
+
+state "valider()" as valider {
+  [*] --> decision
+  state decision {
+    if (verifierArticles()) {
+      :panier.valider();
+    }
+  }
+}
+
+state "supprimer()" as supprimer {
+  [*] --> action
+  state action {
+    :panier.vider();
+  }
+}
+
+state "vider()" as vider {
+  [*] --> action
+  state action {
+    :panier = new Panier();
+  }
+}
+
+state "verifierArticles()" as verifierArticles {
+  [*] --> decision
+  state decision {
+    if (panier.estVide()) return false;
+    return true;
+  }
+}
+
+@enduml

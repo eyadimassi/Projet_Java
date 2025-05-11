@@ -1,0 +1,7 @@
+@startuml
+[*] --> "brouillon" : etat\ninitial
+"brouillon" --> "publie"
+"publie" --> "brouillon"
+"publie" --> "supprime"
+"supprime" --> [*] : etat\nfinal
+@enduml

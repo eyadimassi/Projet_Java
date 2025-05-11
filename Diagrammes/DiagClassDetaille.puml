@@ -1,0 +1,80 @@
+@startuml
+
+class Personne {
+  - nom : String
+  - prenom : String
+  - email : String
+  - mdp : String
+  + Personne()
+  + seConnecter()
+}
+
+class Admin {
+  + creerProduit()
+  + afficherProduit()
+  + supprimerProduit()
+  + ajouterMarque()
+  + ajouterCategorie()
+  + modifierProduit()
+  + modifierMarque()
+  + modifierCategorie()
+  + supprimerMarque()
+  + supprimerCategorie()
+}
+
+class Marque {
+  - nom : String
+  - produits : List<Produit>
+  + Marque()
+  + creerProduit()
+  + listerProduits() : List<Produit>
+}
+
+class Produit {
+  - nom : String
+  - ref : int
+  - marque : Marque
+  + Produit()
+  + getNom()
+  + getRef()
+}
+
+class Commande {
+  - id : int
+  - etat : String
+  - date : String
+  + Commande()
+  + getEtat()
+  + setEtat()
+}
+
+class Panier {
+  - id : int
+  - produits : List<Produit>
+  + Panier()
+  + creerPanier()
+  + getProduits() : List<Produit>
+}
+
+class User {
+  - panier : Panier
+  - commandes : List<Commande>
+  + ajouterProduitPanier()
+  + supprimerProduitPanier()
+  + passerCommande()
+  + consulterPanier()
+  + consulterCommande()
+  + supprimerUser()
+}
+
+Personne <|-- Admin
+Personne <|-- User
+
+User --> Panier : possède
+User --> Commande : passer
+Commande --> Produit : contient
+Panier o-- Produit
+Produit --> Marque : appartient
+Marque --> Produit : contient
+
+@enduml

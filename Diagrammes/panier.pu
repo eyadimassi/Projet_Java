@@ -1,0 +1,31 @@
+@startuml
+|Utilisateur|
+start
+:Vérifier si l'utilisateur est connecté?;
+
+if (Utilisateur connecté ?) then (oui)
+  :Vérifier si le produit est en stock?;
+  if (Produit en stock ?) then (oui)
+    :Ajouter le produit au panier;
+    :Afficher confirmation ajout au panier;
+  else (non)
+    :Afficher message d'erreur;
+    :Indiquer que le produit est en rupture de stock;
+  endif
+else (non)
+  :Demander à l'utilisateur de se connecter;
+  :Afficher message de connexion;
+  :Rediriger vers la page de connexion;
+  :Utilisateur se connecte;
+  :Vérifier si le produit est en stock?;
+  if (Produit en stock ?) then (oui)
+    :Ajouter le produit au panier;
+    :Afficher confirmation ajout au panier;
+  else (non)
+    :Afficher message d'erreur;
+    :Indiquer que le produit est en rupture de stock;
+  endif
+endif
+
+stop
+@enduml

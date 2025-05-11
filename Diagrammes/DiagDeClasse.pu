@@ -1,0 +1,53 @@
+@startuml
+'=======================
+' Héritage Personne
+'=======================
+
+class Personne
+class Client
+class Admin
+
+Personne <|-- Client
+Personne <|-- Admin
+
+'=======================
+' Gestion Admin
+'=======================
+
+Admin --> Client : gère
+Admin --> Produit : gère
+Admin --> Categorie : gère
+Admin --> Marque : gère
+
+'=======================
+' Produits
+'=======================
+
+class Produit
+class Marque
+class Categorie
+
+Produit --> Marque : appartient à
+Produit --> Categorie : classé dans
+
+Client --> Produit : consulte
+
+'=======================
+' Panier et commande
+'=======================
+
+class Panier
+class Commande
+
+' Association forte (composition) : Le panier appartient au client, si client disparaît, son panier disparaît aussi.
+Client "1" *-- "1" Panier : possède
+
+' Association faible : La commande peut exister indépendamment, mais un client peut passer plusieurs commandes
+Client "1" --> "*" Commande : passe
+
+' Panier contient des produits, mais pas une relation de dépendance forte
+Panier "1" o-- "*" Produit : contient
+
+' Commande contient des produits, mais pas une relation de dépendance forte
+Commande "1" o-- "*" Produit : contient
+@enduml

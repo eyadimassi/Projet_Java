@@ -1,0 +1,28 @@
+@startuml
+actor Client
+entity "Panier" as Panier
+entity "Commande" as Commande
+entity "Produit" as Produit
+entity "Stock" as Stock
+
+
+Client -> Panier : ajouterProduit(Produit)
+Client -> Panier : visualiserPanier()
+Client -> Panier : passerCommande()
+Panier -> Commande : creerCommande()
+Commande -> Panier : obtenirProduits()
+Commande -> Produit : ajouterProduit()
+Commande -> Stock : verifierStock()
+Stock -> Commande : stockSuffisant/insuffisant
+
+alt stock suffisant
+    Commande -> Client : afficherTotalCommande()
+    Client -> Commande : validerCommande()
+    Commande -> Produit : validerDisponibilite()
+    Commande -> Stock : mettreAJourStock()
+    Commande -> Client : confirmationCommande()
+else stock insuffisant
+    Commande -> Client : messageErreur("Quantité insuffisante")
+    Client -> Commande : ajusterCommande()
+end
+@enduml

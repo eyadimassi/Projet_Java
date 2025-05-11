@@ -1,0 +1,73 @@
+@startuml
+[*] --> Cree : entry/initialiserCommande()
+
+Cree --> EnTraitement : valider commande\nvaliderCommande()
+EnTraitement : entry/preparerCommande()
+
+Cree --> Paye : payer commande\npayerCommande()
+Paye : entry/enregistrerPaiement()
+
+Paye --> Livre : vérifier paiement\nverifierPaiement()
+Livre : entry/cloturerCommande()
+
+EnTraitement --> Expedier : expediter\nexpedier()
+Expedier : entry/notifierExpedition()
+
+Expedier --> Livre : confirmer livraison\nconfirmerLivraison()
+
+Livre --> [*] : terminer\nterminer()
+[*] --> Supprimée : terminer\nterminer()
+
+' États finaux et actions associées
+state Supprimée {
+    :terminer();
+    :commande.archiver();
+}
+
+' Méthodes (note-like blocks pour garder le style de l’exemple)
+note right of Cree
+validerCommande() {
+  if (commande.estValide()) {
+    commande.changerEtat("en traitement");
+  }
+}
+end note
+
+note left of Paye
+payerCommande() {
+  paiement.effectuer();
+  commande.changerEtat("payé");
+}
+end note
+
+note left of Livre
+verifierPaiement() {
+  if (!paiement.estEffectué()) {
+    commande.changerEtat("payé");
+  } else {
+    commande.changerEtat("final");
+  }
+}
+end note
+
+note right of Expedier
+expedier() {
+  logistique.envoyerColis();
+  commande.changerEtat("expédié");
+}
+end note
+
+note bottom of Livre
+confirmerLivraison() {
+  if (livraison.confirmée()) {
+    commande.changerEtat("livré");
+  }
+}
+end note
+
+note bottom of Supprimée
+terminer() {
+  commande.archiver();
+}
+end note
+@enduml

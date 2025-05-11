@@ -1,0 +1,63 @@
+@startuml
+
+[*] --> Disponible
+
+state Disponible {
+  :entry / initialiserProduit();
+}
+
+Disponible --> "mis a jour" : mettreAJourProduit()
+"mis a jour" --> Disponible : validerMiseAJour()
+"mis a jour" --> hors_stock : verifierStock()
+
+Disponible --> supprime : supprimer produit
+hors_stock --> rupture_de_stock : notifierRupture()
+
+supprime --> [*]
+rupture_de_stock --> [*]
+
+state "mettreAJourProduit()" as mettreAJour {
+  [*] --> action
+  state action {
+    :produit.mettreAJourInformations();
+    return true;
+  }
+}
+
+state "validerMiseAJour()" as validerMaj {
+  [*] --> decision
+  state decision {
+    if (produit.estValidé()) {
+      return true;
+    }
+    return false;
+  }
+}
+
+state "verifierStock()" as verifierStock {
+  [*] --> decision
+  state decision {
+    if (produit.quantité == 0) {
+      return true;
+    }
+    return false;
+  }
+}
+
+state "supprimerProduit()" as supprimerProduit {
+  [*] --> action
+  state action {
+    produit.marquerCommeSupprimé();
+    baseDeDonnées.retirer(produit);
+  }
+}
+
+state "notifierRupture()" as notifierRupture {
+  [*] --> action
+  state action {
+    notification.envoyer("Rupture de stock");
+    produit.marquerHorsStock();
+  }
+}
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+|Utilisateur|
+start
+:Vérifier si l'utilisateur possède un compte?;
+
+if (Possède-t-il un compte ?) then (oui)
+  :Entrer identifiants;
+  if (Identifiants valides?) then (oui)
+    :Se connecter;
+    :Accéder au tableau de bord;
+  else (non)
+    :Afficher message d'erreur;
+    :Demander à l'utilisateur de réessayer;
+  endif
+else (non)
+  :Rediriger vers l'inscription;
+  :S'inscrire;
+  :Créer un compte;
+  :Se connecter;
+  :Accéder au tableau de bord;
+endif
+
+stop
+@enduml

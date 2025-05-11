@@ -1,0 +1,9 @@
+@startuml
+[*] --> "vide" : etat\ninitial
+"vide" --> "contient des\narticles"
+"contient des\narticles" --> "vide"
+"contient des\narticles" --> "valide"
+"valide" --> [*] : etat\nfinal
+"contient des\narticles" --> "supprime"
+"supprime" --> [*] : etat\nfinal
+@enduml

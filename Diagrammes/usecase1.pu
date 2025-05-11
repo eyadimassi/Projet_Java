@@ -1,0 +1,87 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FADADD
+  BorderColor black
+}
+
+actor Client
+actor Admin
+
+' -------------------- Client Use Cases --------------------
+rectangle ClientUseCases {
+  usecase "Consulter la liste des produits" as UC1
+  usecase "Consulter un produit" as UC2
+  usecase "Rechercher un/des produit(s)" as UC3
+  usecase "Filtrer les produits par marque/catégorie/prix" as UC4
+  usecase "Ajouter un produit au panier" as UC5
+  usecase "Consulter et gérer son panier" as UC6
+  usecase "Passer une commande" as UC7
+  usecase "Recevoir un mail de confirmation" as UC8
+  usecase "Consulter l'historique des commandes" as UC9
+  usecase "Se déconnecter" as UC10
+  usecase "S'authentifier" as UC11
+}
+
+Client --> UC1
+Client --> UC2
+Client --> UC3
+Client --> UC5
+Client --> UC6
+Client --> UC7
+Client --> UC8
+Client --> UC9
+Client --> UC10
+Client --> UC11
+
+UC1 .u.> UC4 : <<extend>>
+UC3 .u.> UC4 : <<extend>>
+UC5 --> UC6 : <<include>>
+UC7 --> UC11 : <<include>>
+UC6 --> UC11 : <<include>>
+UC9 --> UC11 : <<include>>
+
+' -------------------- Admin Use Cases --------------------
+rectangle AdminUseCases {
+  usecase "Consulter la liste des clients enregistrés" as UA1
+  usecase "Ajouter un client" as UA2
+  usecase "Supprimer un client" as UA3
+  usecase "Gérer les clients" as UA4
+
+  usecase "Ajouter un produit" as UA5
+  usecase "Modifier un produit" as UA6
+  usecase "Supprimer un produit" as UA7
+  usecase "Ajouter une marque / catégorie" as UA8
+  usecase "Supprimer une marque / catégorie" as UA9
+  usecase "Gérer les produits" as UA10
+
+  usecase "Modifier commande" as UA11
+  usecase "Confirmer commande" as UA12
+  usecase "Gérer les commandes" as UA13
+}
+
+Admin --> UA4
+Admin --> UA10
+Admin --> UA13
+Admin --> UC11
+
+UA1 .u.> UA4 : <<extend>>
+UA2 .u.> UA4 : <<extend>>
+UA3 .u.> UA4 : <<extend>>
+
+UA5 .u.> UA10 : <<extend>>
+UA6 .u.> UA10 : <<extend>>
+UA7 .u.> UA10 : <<extend>>
+UA8 .u.> UA10 : <<extend>>
+UA9 .u.> UA10 : <<extend>>
+
+UA11 .u.> UA13 : <<extend>>
+UA12 .u.> UA13 : <<extend>>
+
+UA4 --> UC11 : <<include>>
+UA10 --> UC11 : <<include>>
+UA13 --> UC11 : <<include>>
+
+@enduml

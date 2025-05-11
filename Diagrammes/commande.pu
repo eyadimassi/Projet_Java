@@ -1,0 +1,31 @@
+@startuml
+|Utilisateur|
+start
+:Vérifier si le panier est vide?;
+
+if (Panier vide ?) then (oui)
+  :Afficher message d'erreur;
+  :Inviter l'utilisateur à ajouter des produits au panier;
+  stop
+else (non)
+  :Vérifier si l'utilisateur est connecté?;
+  if (Utilisateur connecté ?) then (oui)
+    :Vérifier les informations de paiement?;
+    if (Informations de paiement valides ?) then (oui)
+      :Valider la commande;
+      :Confirmer la commande;
+      :Afficher message de confirmation;
+    else (non)
+      :Afficher message d'erreur;
+      :Inviter l'utilisateur à vérifier ses informations de paiement;
+    endif
+  else (non)
+    :Demander à l'utilisateur de se connecter ou s'inscrire;
+    :Afficher message de connexion;
+    :Rediriger vers la page de connexion ou inscription;
+    stop
+  endif
+endif
+
+stop
+@enduml

@@ -71,3 +71,151 @@ Ce projet est une application Java Swing simulant un site e-commerce basique pou
     *   **DAO :** `UtilisateurDAO.java`, `ProduitDAO.java`, `CartDAO.java`, `Cart_itemsDAO.java`, `OrderDAO.java`, `CategorieDAO.java`, `MarqueDAO.java`, `Order_itemsDAO.java` (Gèrent la persistance des données)
     *   **Interfaces Graphiques :** `LoginFrame.java`, `AdminDashboard.java`, `ClientInterface.java`
     *   **Configuration/Point d'Entrée :** `CosmeticsWebsite.java` (Contient la configuration de la connexion BD et potentiellement l'ancien `main`)
+
+
+## Diagramme de cas d’utilisation
+
+![Diagram](Diagrammes/usecase1.png)
+
+## Diagramme de classe preliminaire
+![Diagram](Diagrammes/DiagDeClasse.png)
+
+## Diagramme de classe detaille
+![Diagram](Diagrammes/DiagClassDetaille.png)
+
+
+## Les Priorités des cas d’utilisation
+
+Pour le 1er sprint, nous avons choisi :
+- Passer une commande
+- Ajouter un produit au panier
+
+
+
+## Cas d'utilisation de Haute Priorité
+
+### Cas d'utilisation 1 : Ajouter un produit au panier
+![Diagram](Diagrammes/panier.png)
+
+#### Table de décision pour l'ajout d'un produit au panier :
+|                              | 1 | 2 | 3 | 4 |
+|------------------------------|---|---|---|---|
+| **Préconditions**            |   |   |   |   |
+| Client connecté              | F | T | T | T |
+| Produit disponible en stock  | T | F | T | T |
+| Produit non déjà dans panier | T | T | F | T |
+| Quantité demandée > 0        | T | T | T | F |
+| **Postcondition**            |   |   |   |   |
+| Produit ajouté au panier     | F | F | F | F |
+| **Nombre de jeux de tests**  | 1 | 1 | n | 1 |
+
+---
+
+## DIAGRAMME DE SEQUENCE
+![Diagram](Diagrammes/DiagDeSeqAjoutProduit.png)
+
+## Algorithme d'ajout de produit
+
+Début  
+&nbsp;&nbsp;si vérifierConnexion() alors  
+&nbsp;&nbsp;&nbsp;&nbsp;si vérifierDroits() alors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;se connecter()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;afficherInterfaceAdmin()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;accéderGestionProduits()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;afficherFormulaireAjoutProduit()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;produit = saisirNouveauProduit()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;si vérifierInfosProduit(produit) alors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;si verifierProduitExist(produit) alors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messageErreur("Produit déjà existant")  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ajusterProduit(produit)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sinon  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;associerMarque(produit)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;associerCategorie(produit)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ajouterProduitDansBaseDeDonnées(produit)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;confirmationAjoutProduit()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fin si  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;afficherListeProduits()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ajoutProduitEffectué()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fin si  
+&nbsp;&nbsp;&nbsp;&nbsp;fin si  
+&nbsp;&nbsp;fin si  
+Fin
+
+
+### Cas d'utilisation 2 : Passer une commande
+![Diagram](Diagrammes/commande.png)
+
+#### Table de décision pour passer une commande :
+|  | 1 | 2 | 3 | 4 | 5 |
+| --- | --- | --- | --- | --- | --- |
+| **Préconditions** | Client connecté | F | T | T | T | T |
+|  | Panier non vide |  | F | T | T |
+|  | Quantité disponible en stock |  |  | F | T |
+|  | Informations de livraison fournies |  |  |  | F | T |
+|  | Un mode de paiement choisi |  |  |  |  | T |
+| **Postcondition** | Recevoir un mail de confirmation | F | F | F | F | T |
+| **Nombre de jeux de tests** | 2 | 2 | 2*n | 1 | 1 |
+
+## DIAGRAMME DE SEQUENCE
+![Diagram](Diagrammes/DiagSequencePasserCommande.png)
+ 
+## Algorithme de validation de commande
+
+Début  
+&nbsp;&nbsp;si vérifierConnexion() alors  
+&nbsp;&nbsp;&nbsp;&nbsp;si vérifierPanierVide() alors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messageErreur("Panier vide")  
+&nbsp;&nbsp;&nbsp;&nbsp;sinon  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;si vérifierQuantitéDisponible() alors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;si vérifierStockDisponible() alors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validerQuantité()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;infosLivraison = saisirInformationsLivraison()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modePaiement = choisirModePaiement()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commande = créerCommande()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enregistrerCommande(commande)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lierProduitsPanier(commande)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;associerModeDePaiement(commande, modePaiement)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;associerAdresseLivraison(commande, infosLivraison)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;envoyerMailConfirmation(commande)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recevoirMailConfirmation()  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sinon  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messageErreur("Quantité insuffisante en stock")  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fin si  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fin si  
+&nbsp;&nbsp;&nbsp;&nbsp;fin si  
+&nbsp;&nbsp;fin si  
+Fin
+
+## Les diagrammes de machine à etats et leurs traductions
+
+1//User
+
+![Diagram](Diagrammes/user_tansition.png)
+
+TRADUCTION
+
+![Diagram](Diagrammes/user_transition_detaille.png)
+
+2//Produit
+
+![Diagram](Diagrammes/produit_transition.png)
+
+TRADUCTION
+
+![Diagram](Diagrammes/produit_transition_detaille.png)
+
+3//Panier
+
+![Diagram](Diagrammes/panier_tansition.png)
+
+TRADUCTION
+
+![Diagram](Diagrammes/panier_tansition_detaille.png)
+
+4//Commande
+
+![Diagram](Diagrammes/commande_transition.png)
+
+TRADUCTION
+
+![Diagram](Diagrammes/commande_tansition_detaille.png)

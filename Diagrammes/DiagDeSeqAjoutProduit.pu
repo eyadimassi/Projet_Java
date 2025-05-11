@@ -1,0 +1,34 @@
+@startuml
+actor Admin
+entity "Produit" as Produit
+entity "Marque" as Marque
+entity "Categorie" as Categorie
+entity "BaseDeDonnées" as BaseDeDonnées
+
+
+Admin -> Admin : vérifierConnexion()
+Admin -> Admin : vérifierDroits()
+
+
+Admin -> Admin : se connecter()
+Admin -> Admin : afficherInterfaceAdmin()
+Admin -> Admin : accéderGestionProduits()
+Admin -> Admin : afficherFormulaireAjoutProduit()
+Admin -> Produit : saisirNouveauProduit()
+Produit -> Admin : vérifierInfosProduit()  // Vérification des informations (nom, prix, etc.)
+
+
+Produit -> BaseDeDonnées : verifierProduitExist()
+alt produit existant
+    BaseDeDonnées -> Admin : messageErreur("Produit déjà existant")
+    Admin -> Admin : ajusterProduit()
+else produit non existant
+    Produit -> Marque : associerMarque()
+    Produit -> Categorie : associerCategorie()
+    Produit -> BaseDeDonnées : ajouterProduitDansBaseDeDonnées()
+    Admin -> Admin : confirmationAjoutProduit()
+end
+
+Admin -> Admin : afficherListeProduits()
+Admin -> Admin : ajoutProduitEffectue()
+@enduml
